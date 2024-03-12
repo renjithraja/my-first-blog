@@ -9,23 +9,20 @@
     </head>
     <body>
         <header class="page-header">
-          <div class="container">
-              <h1><a href="/">Django Girls Blog</a></h1>
-          </div>
+            <div class="container">
+        {% if user.is_authenticated %}
+           <a href="{% url 'post_new' %}" class="top-menu">
+                {% include './icons/file-earmark-plus.svg' %}
+          </a>
+        {% endif %}
+                <h1><a href="/">Django Girls Blog</a></h1>
+            </div>
         </header>
-
-        <main class="container">
+        <main class="content container">
             <div class="row">
                 <div class="col">
-                {% block content %}
-                    <article class="post">
-                        <time class="date">
-                            {{ post.published_date }}
-                        </time>
-                        <h2><a href="">{{ post.title }}</a></h2>
-                        <p>{{ post.text|linebreaksbr }}</p>
-                    </article>
-                {% endblock %}
+                    {% block content %}
+                    {% endblock %}
                 </div>
             </div>
         </main>
