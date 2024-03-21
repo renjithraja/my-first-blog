@@ -3,13 +3,57 @@ from .models import Post,Comment
 from .forms import PostForm, CommentForm
 from django.contrib.auth.decorators import login_required
 from django.utils import timezone
+from .forms import ContactForm
+#email
+from django.core.mail import send_mail
+
+
+
+def contact(request):
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            print('ok')
+            pass
+    else:
+        form = ContactForm()
+    return render(request, 'contact.html', {'form': form})
 
 
 # Create your views here.
 
 def post_list(request):
+
+    if request.method == 'POST':
+        form = ContactForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['name']
+            email = form.cleaned_data['email']
+            message = form.cleaned_data['message']
+            print(name,email,message)
+
+            message_to_Send=f'suggestion from : {name} \n suggestion:- {message}'
+            send_mail(
+            "djagno_girls suggesstion",
+            message_to_Send,
+            "renjithraja824@gmail.com",
+            ["renjithraja824@gmail.com"],
+              fail_silently=False,
+              )
+            
+
+            return redirect('/')
+        
+
     posts = Post.objects.filter(published_date__lte=timezone.now()).order_by('published_date')
-    return render(request ,'blog/post_list.html',{'posts':posts})
+    form = ContactForm()
+    context={
+        'posts':posts,
+        'form':form
+        }
+
+    
+    return render(request ,'blog/post_list.html',context)
 
 
 
@@ -88,3 +132,4 @@ def comment_remove(request, pk):
     comment = get_object_or_404(Comment, pk=pk)
     comment.delete()
     return redirect('post_detail', pk=comment.post.pk)
+

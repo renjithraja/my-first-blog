@@ -21,4 +21,18 @@
 
         </div>
     {% endfor %}
+    <div style="display: flex; justify-content: center;">
+        <div style="text-align: center;">
+            <h2>Contact Us</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+    
+    
+
+
 {% endblock content %}
